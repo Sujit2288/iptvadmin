@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { DeviceRequest, User } from '../types';
 
 interface RequestsProps {
   requests: DeviceRequest[];
   users: User[];
-  onApprove: (requestId: string, name: string, mobile: string) => void;
+  onApprove: (requestId: string, name: string, mobile: string, manualMac?: string) => void;
   onSwap: (requestId: string, userId: string) => void;
   onDelete: (id: string) => void;
 }
@@ -197,8 +198,7 @@ const Requests: React.FC<RequestsProps> = ({ requests, users, onApprove, onSwap,
                 onClick={() => {
                   if (name && mobile && (isManualMode ? manualMac : true)) {
                     if (isManualMode) {
-                      // Call onApprove with a temporary ID for manual mode
-                      onApprove('manual-' + Date.now(), name, mobile);
+                      onApprove('', name, mobile, manualMac);
                     } else if (selectedRequest) {
                       onApprove(selectedRequest.id, name, mobile);
                     }

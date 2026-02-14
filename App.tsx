@@ -105,15 +105,22 @@ const App: React.FC = () => {
   };
 
   // Database Actions
-  const handleApproveRequest = async (requestId: string, name: string, mobile: string) => {
-    const req = requests.find(r => r.id === requestId);
-    if (!req) return;
+  const handleApproveRequest = async (requestId: string, name: string, mobile: string, manualMac?: string) => {
+    let targetMac = manualMac;
+    
+    // If not manual, find the MAC from the request object
+    if (!manualMac) {
+      const req = requests.find(r => r.id === requestId);
+      if (!req) return;
+      targetMac = req.macAddress;
+    }
 
     try {
       const newUser: Omit<User, 'id'> = {
         name,
         mobile,
-        macAddress: req.macAddress,
+        macAddress: targetMac!,
+        // Set expiry to 24 hours ago to ensure 'Expired' status immediately after approval
         expiryDate: new Date(Date.now() - 86400000).toISOString(), 
         status: 'Expired',
         activePlan: 'No Plan',
@@ -121,7 +128,11 @@ const App: React.FC = () => {
       };
 
       await addDoc(collection(db, "users"), newUser);
-      await deleteDoc(doc(db, "deviceRequests", requestId));
+      
+      // If it came from a real request, delete the request from the queue
+      if (!manualMac && requestId) {
+        await deleteDoc(doc(db, "deviceRequests", requestId));
+      }
     } catch (e) {
       console.error("Error approving request:", e);
     }
