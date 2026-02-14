@@ -67,7 +67,6 @@ const App: React.FC = () => {
         return { 
           ...data, 
           id: doc.id,
-          // Fallback logic for macAddress if it's missing in fields but exists as Doc ID
           macAddress: data.macAddress || data.mac || doc.id,
           requestTime: data.requestTime || new Date().toISOString()
         } as DeviceRequest;
@@ -115,7 +114,7 @@ const App: React.FC = () => {
         name,
         mobile,
         macAddress: req.macAddress,
-        expiryDate: new Date(Date.now() - 86400000).toISOString(), // Start as expired (yesterday)
+        expiryDate: new Date(Date.now() - 86400000).toISOString(), 
         status: 'Expired',
         activePlan: 'No Plan',
         createdAt: new Date().toISOString()
@@ -171,6 +170,11 @@ const App: React.FC = () => {
     await addDoc(collection(db, "channels"), data);
   };
 
+  const handleUpdateChannel = async (channel: Channel) => {
+    const { id, ...data } = channel;
+    await updateDoc(doc(db, "channels", id), data);
+  };
+
   const handleAddCategory = async (cat: Category) => {
     const { id, ...data } = cat;
     await addDoc(collection(db, "categories"), data);
@@ -220,6 +224,7 @@ const App: React.FC = () => {
             categories={categories} 
             bouquets={bouquets}
             onAdd={handleAddChannel}
+            onUpdate={handleUpdateChannel}
             onDelete={(id) => deleteDoc(doc(db, "channels", id))}
           />
         );

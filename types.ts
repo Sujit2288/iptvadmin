@@ -41,6 +41,7 @@ export interface ChannelSource {
 
 export interface Channel {
   id: string;
+  sid: string; // Added Service ID
   name: string;
   img: string;
   category: string;

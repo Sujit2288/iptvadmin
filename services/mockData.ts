@@ -53,6 +53,7 @@ export const initialBouquets: Bouquet[] = [
 export const initialChannels: Channel[] = [
   {
     id: 'ch1',
+    sid: '101',
     name: "Zee Bharat",
     img: "https://imagesdishtvd2h.whatsonindia.com/dasimages/channel/landscape/360x270/TknReKLD.png",
     category: "News",
@@ -72,6 +73,7 @@ export const initialChannels: Channel[] = [
   },
   {
     id: 'ch2',
+    sid: '102',
     name: "ET Now Swadesh",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8s5ukJJCvsZwP7vO8PlUKJHwlnyHZqBiYlA&s",
     category: "News",
