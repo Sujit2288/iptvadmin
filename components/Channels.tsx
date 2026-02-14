@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Channel, Category, Bouquet, ChannelSource } from '../types';
 
@@ -23,7 +22,6 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
   const [key, setKey] = useState('');
 
   const handleAdd = () => {
-    // If DASH is selected or DRM toggle is on, we include the DRM object
     const includeDrm = isDrmEnabled || streamType === 'dash';
     
     const source: ChannelSource = {
@@ -55,162 +53,186 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-slate-800">Live Channels</h3>
+    <div className="space-y-8 animate-in duration-500">
+      <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h3 className="text-3xl font-black text-slate-800 tracking-tight leading-none">Broadcasting Grid</h3>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-3">Live stream delivery infrastructure</p>
+        </div>
         <button 
-          onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-900/20 transition-all"
+          onClick={() => { resetForm(); setIsAddModalOpen(true); }}
+          className="flex items-center space-x-3 px-10 py-5 bg-blue-600 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl shadow-blue-500/30 hover:bg-blue-700 transition-all active:scale-95"
         >
-          <span className="material-icons text-sm">add</span>
-          <span>Add Channel</span>
+          <span className="material-icons text-lg">add_circle</span>
+          <span>Deploy Channel</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {channels.map(channel => (
-          <div key={channel.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all">
-            <div className="h-40 bg-slate-50 relative p-4 flex items-center justify-center">
-              <img src={channel.img} alt={channel.name} className="max-h-full max-w-full object-contain" />
+          <div key={channel.id} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+            <div className="h-48 bg-slate-50 relative p-6 flex items-center justify-center border-b border-slate-50">
+              <img src={channel.img} alt={channel.name} className="max-h-full max-w-full object-contain filter drop-shadow-lg" />
               <button 
                 onClick={() => onDelete(channel.id)}
-                className="absolute top-2 right-2 p-1.5 bg-red-50 text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white shadow-lg flex items-center justify-center"
               >
-                <span className="material-icons text-sm">delete</span>
+                <span className="material-icons text-xl">delete</span>
               </button>
-              <div className="absolute top-2 left-2 flex flex-col gap-1">
-                 <span className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-bold uppercase rounded-md shadow-lg">
+              <div className="absolute top-4 left-4 flex flex-col gap-2">
+                 <span className="px-3 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-lg shadow-xl tracking-widest">
                     {channel.category}
                  </span>
                  {channel.sources[0]?.drm && (
-                   <span className="px-2 py-0.5 bg-amber-500 text-white text-[9px] font-bold uppercase rounded-md shadow-lg">
+                   <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black uppercase rounded-lg shadow-xl tracking-widest">
                      DRM
                    </span>
                  )}
               </div>
             </div>
-            <div className="p-4">
-              <h4 className="text-sm font-bold text-slate-800 truncate mb-1">{channel.name}</h4>
-              <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-3">
-                Bouquet: {channel.bouquet}
+            <div className="p-8">
+              <h4 className="text-lg font-black text-slate-800 tracking-tight truncate mb-1">{channel.name}</h4>
+              <p className="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] mb-4">
+                ID: {channel.bouquet}
               </p>
-              <div className="flex items-center space-x-2">
-                <span className="text-[9px] font-bold px-2 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">
+              <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                <span className="text-[10px] font-black px-2 py-1 bg-blue-100 text-blue-600 rounded-lg uppercase">
                   {channel.sources[0]?.type}
                 </span>
-                <span className="text-[9px] text-slate-400 truncate flex-1">
+                <span className="text-[9px] font-bold text-slate-400 truncate flex-1 font-mono">
                   {channel.sources[0]?.url}
                 </span>
               </div>
             </div>
           </div>
         ))}
+        {channels.length === 0 && (
+          <div className="col-span-full py-40 text-center font-black text-slate-200 uppercase tracking-[0.5em] text-[16px]">
+            No Broadcasts Active
+          </div>
+        )}
       </div>
 
-      {/* Add Modal */}
+      {/* Re-Engineered Modal for better reliability and consistency */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-auto animate-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white rounded-t-2xl z-10">
-              <h4 className="text-lg font-bold text-slate-800">Configure New Channel</h4>
-              <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <span className="material-icons">close</span>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-10 bg-slate-900/90 backdrop-blur-md overflow-hidden">
+          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300 border border-white/20">
+            {/* Modal Header */}
+            <div className="p-10 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10 rounded-t-[3rem] flex-shrink-0">
+              <div>
+                <h4 className="text-3xl font-black text-slate-800 tracking-tight">Configure Channel</h4>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Establish a new broadcast node in the grid</p>
+              </div>
+              <button onClick={() => setIsAddModalOpen(false)} className="w-14 h-14 bg-slate-50 hover:bg-slate-100 rounded-[1.5rem] flex items-center justify-center text-slate-400 transition-all hover:rotate-90">
+                <span className="material-icons text-3xl">close</span>
               </button>
             </div>
             
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h5 className="text-xs font-bold text-blue-600 uppercase tracking-widest border-l-2 border-blue-600 pl-2">Basic Info</h5>
-                  <div className="space-y-3">
-                    <InputField label="Channel Name" value={name} onChange={setName} placeholder="e.g. Zee TV" />
-                    <InputField label="Logo URL" value={img} onChange={setImg} placeholder="https://..." />
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Category</label>
+            {/* Modal Scrollable Content */}
+            <div className="p-10 overflow-y-auto custom-scrollbar flex-1 bg-white space-y-12">
+              {/* Part 1: Identity */}
+              <div className="space-y-8">
+                <h5 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] border-l-4 border-blue-600 pl-4">Channel Identity</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <InputField label="Official Title" value={name} onChange={setName} placeholder="e.g. Zee TV" />
+                  <InputField label="Asset Logo URL" value={img} onChange={setImg} placeholder="https://..." />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Grid Taxonomy</label>
+                    <div className="relative">
                       <select 
-                        className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm appearance-none cursor-pointer"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                       >
-                        <option value="">-- Select --</option>
+                        <option value="">-- SELECT CATEGORY --</option>
                         {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                       </select>
+                      <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Bouquet</label>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Content Portfolio</label>
+                    <div className="relative">
                       <select 
-                        className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm appearance-none cursor-pointer"
                         value={bouquet}
                         onChange={(e) => setBouquet(e.target.value)}
                       >
-                        <option value="">-- Select --</option>
+                        <option value="">-- SELECT BOUQUET --</option>
                         {bouquets.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                       </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h5 className="text-xs font-bold text-indigo-600 uppercase tracking-widest border-l-2 border-indigo-600 pl-2">Streaming Config</h5>
-                  <div className="space-y-3">
-                    <InputField label="Stream Link" value={streamUrl} onChange={setStreamUrl} placeholder="HLS/DASH URL" />
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Stream Type</label>
-                      <div className="flex space-x-4">
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                          <input type="radio" checked={streamType === 'hls'} onChange={() => { setStreamType('hls'); setIsDrmEnabled(false); }} className="w-4 h-4 text-blue-600" />
-                          <span className="text-sm font-bold text-slate-600">HLS</span>
-                        </label>
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                          <input type="radio" checked={streamType === 'dash'} onChange={() => { setStreamType('dash'); setIsDrmEnabled(true); }} className="w-4 h-4 text-blue-600" />
-                          <span className="text-sm font-bold text-slate-600">DASH</span>
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className={`pt-4 mt-4 border-t border-slate-100 transition-all ${streamType === 'dash' ? 'opacity-100' : 'opacity-60'}`}>
-                      <div className="flex items-center justify-between mb-4">
-                        <label className="text-sm font-bold text-slate-800">
-                          {streamType === 'dash' ? 'DRM Configuration (Required)' : 'Enable DRM Protection'}
-                        </label>
-                        {streamType !== 'dash' && (
-                          <button 
-                            onClick={() => setIsDrmEnabled(!isDrmEnabled)}
-                            className={`w-10 h-5 rounded-full relative transition-colors ${isDrmEnabled ? 'bg-blue-600' : 'bg-slate-200'}`}
-                          >
-                            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${isDrmEnabled ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
-                          </button>
-                        )}
-                      </div>
-                      
-                      {(isDrmEnabled || streamType === 'dash') && (
-                        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-                           <InputField label="DRM KID" value={kid} onChange={setKid} placeholder="Example: 10616d7c4bee41f1..." />
-                           <InputField label="DRM KEY" value={key} onChange={setKey} placeholder="Example: dc85f2112f63477f..." />
-                           <p className="text-[10px] text-slate-400 italic">
-                             Required for DASH clear-key protection.
-                           </p>
-                        </div>
-                      )}
+                      <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {/* Part 2: Technical Protocol */}
+              <div className="space-y-8">
+                <h5 className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] border-l-4 border-indigo-600 pl-4">Delivery Protocol</h5>
+                <div className="space-y-8">
+                  <InputField label="Stream Ingress Link" value={streamUrl} onChange={setStreamUrl} placeholder="HLS/DASH Master URL" />
+                  
+                  <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Codec Encapsulation</label>
+                      <div className="flex space-x-6">
+                        <label className="flex items-center space-x-3 cursor-pointer group">
+                          <input type="radio" checked={streamType === 'hls'} onChange={() => { setStreamType('hls'); setIsDrmEnabled(false); }} className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-slate-300" />
+                          <span className="text-xs font-black text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">HLS (M3U8)</span>
+                        </label>
+                        <label className="flex items-center space-x-3 cursor-pointer group">
+                          <input type="radio" checked={streamType === 'dash'} onChange={() => { setStreamType('dash'); setIsDrmEnabled(true); }} className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-slate-300" />
+                          <span className="text-xs font-black text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">DASH (MPD)</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 max-w-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-black text-slate-800 uppercase tracking-wider">
+                          DRM Protection
+                        </span>
+                        <button 
+                          onClick={() => streamType !== 'dash' && setIsDrmEnabled(!isDrmEnabled)}
+                          className={`w-14 h-7 rounded-full relative transition-all duration-300 ${isDrmEnabled ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30' : 'bg-slate-300'} ${streamType === 'dash' ? 'cursor-not-allowed opacity-80' : ''}`}
+                        >
+                          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${isDrmEnabled ? 'translate-x-8' : 'translate-x-1'}`} />
+                        </button>
+                      </div>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-2 italic">Required for DASH clearing</p>
+                    </div>
+                  </div>
+
+                  {/* DRM Sub-form */}
+                  {(isDrmEnabled || streamType === 'dash') && (
+                    <div className="p-8 bg-amber-50 rounded-[2.5rem] border border-amber-100 space-y-8 animate-in slide-in-from-top-4">
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                         <InputField label="ClearKey ID (KID)" value={kid} onChange={setKid} placeholder="32 chars HEX" />
+                         <InputField label="ClearKey VALUE (KEY)" value={key} onChange={setKey} placeholder="32 chars HEX" />
+                       </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <div className="p-6 bg-slate-50 border-t border-slate-100 rounded-b-2xl flex justify-end space-x-3 sticky bottom-0 z-10">
+            {/* Modal Footer */}
+            <div className="p-10 bg-slate-50 border-t border-slate-100 rounded-b-[3rem] flex flex-col sm:flex-row justify-end gap-6 flex-shrink-0 sticky bottom-0 z-10">
               <button 
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-4 py-2 text-slate-600 font-bold text-sm hover:text-slate-800"
+                className="px-10 py-5 text-slate-400 font-black uppercase tracking-widest text-[11px] hover:text-slate-800 transition-colors"
               >
-                Cancel
+                Abort Configuration
               </button>
               <button 
                 disabled={!name || !streamUrl || !category || (streamType === 'dash' && (!kid || !key))}
                 onClick={handleAdd}
-                className="px-8 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-900/20 transition-all disabled:opacity-50"
+                className="px-20 py-6 bg-blue-600 text-white rounded-2xl shadow-2xl shadow-blue-500/40 uppercase tracking-widest text-[11px] font-black disabled:opacity-50 hover:bg-blue-700 transition-all active:scale-95"
               >
-                Publish Channel
+                Deploy Broadcast
               </button>
             </div>
           </div>
@@ -221,14 +243,14 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
 };
 
 const InputField = ({ label, value, onChange, placeholder }: any) => (
-  <div>
-    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{label}</label>
+  <div className="w-full">
+    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">{label}</label>
     <input 
       type="text" 
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm"
     />
   </div>
 );
