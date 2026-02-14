@@ -53,53 +53,55 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
   };
 
   return (
-    <div className="space-y-8 animate-in duration-500">
-      <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+    <div className="space-y-10 animate-in duration-500">
+      {/* Header Section */}
+      <div className="bg-white p-12 rounded-[4rem] border border-slate-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8">
         <div>
-          <h3 className="text-3xl font-black text-slate-800 tracking-tight leading-none">Broadcasting Grid</h3>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-3">Live stream delivery infrastructure</p>
+          <h3 className="text-4xl font-black text-slate-800 tracking-tighter leading-none">Broadcasting Grid</h3>
+          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Live stream delivery infrastructure</p>
         </div>
         <button 
           onClick={() => { resetForm(); setIsAddModalOpen(true); }}
-          className="flex items-center space-x-3 px-10 py-5 bg-blue-600 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl shadow-blue-500/30 hover:bg-blue-700 transition-all active:scale-95"
+          className="flex items-center space-x-4 px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-black uppercase text-[12px] tracking-widest shadow-[0_25px_50px_-12px_rgba(37,99,235,0.4)] hover:bg-blue-700 transition-all hover:scale-105 active:scale-95"
         >
-          <span className="material-icons text-lg">add_circle</span>
+          <span className="material-icons text-2xl">add_circle</span>
           <span>Deploy Channel</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {/* Grid of Channels */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         {channels.map(channel => (
-          <div key={channel.id} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-            <div className="h-48 bg-slate-50 relative p-6 flex items-center justify-center border-b border-slate-50">
-              <img src={channel.img} alt={channel.name} className="max-h-full max-w-full object-contain filter drop-shadow-lg" />
+          <div key={channel.id} className="bg-white rounded-[3.5rem] shadow-sm border border-slate-100 overflow-hidden group hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] hover:-translate-y-3 transition-all duration-500">
+            <div className="h-56 bg-slate-50 relative p-8 flex items-center justify-center border-b border-slate-50/50">
+              <img src={channel.img} alt={channel.name} className="max-h-full max-w-full object-contain filter drop-shadow-2xl" />
               <button 
                 onClick={() => onDelete(channel.id)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md text-red-500 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white shadow-lg flex items-center justify-center"
+                className="absolute top-6 right-6 w-12 h-12 bg-white/90 backdrop-blur-xl text-red-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white shadow-xl flex items-center justify-center"
               >
-                <span className="material-icons text-xl">delete</span>
+                <span className="material-icons text-2xl">delete</span>
               </button>
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                 <span className="px-3 py-1 bg-blue-600 text-white text-[9px] font-black uppercase rounded-lg shadow-xl tracking-widest">
+              <div className="absolute top-6 left-6 flex flex-col gap-3">
+                 <span className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black uppercase rounded-xl shadow-2xl tracking-widest">
                     {channel.category}
                  </span>
                  {channel.sources[0]?.drm && (
-                   <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black uppercase rounded-lg shadow-xl tracking-widest">
+                   <span className="px-4 py-1.5 bg-amber-500 text-white text-[10px] font-black uppercase rounded-xl shadow-2xl tracking-widest">
                      DRM
                    </span>
                  )}
               </div>
             </div>
-            <div className="p-8">
-              <h4 className="text-lg font-black text-slate-800 tracking-tight truncate mb-1">{channel.name}</h4>
-              <p className="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] mb-4">
-                ID: {channel.bouquet}
+            <div className="p-10">
+              <h4 className="text-2xl font-black text-slate-800 tracking-tighter truncate mb-2">{channel.name}</h4>
+              <p className="text-[10px] text-slate-400 uppercase font-black tracking-[0.3em] mb-6">
+                PORTFOLIO: {channel.bouquet}
               </p>
-              <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                <span className="text-[10px] font-black px-2 py-1 bg-blue-100 text-blue-600 rounded-lg uppercase">
+              <div className="flex items-center space-x-4 bg-slate-50 p-4 rounded-[1.75rem] border border-slate-100">
+                <span className="text-[11px] font-black px-3 py-1.5 bg-blue-100 text-blue-600 rounded-xl uppercase">
                   {channel.sources[0]?.type}
                 </span>
-                <span className="text-[9px] font-bold text-slate-400 truncate flex-1 font-mono">
+                <span className="text-[10px] font-bold text-slate-400 truncate flex-1 font-mono">
                   {channel.sources[0]?.url}
                 </span>
               </div>
@@ -107,111 +109,138 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
           </div>
         ))}
         {channels.length === 0 && (
-          <div className="col-span-full py-40 text-center font-black text-slate-200 uppercase tracking-[0.5em] text-[16px]">
+          <div className="col-span-full py-60 text-center font-black text-slate-200 uppercase tracking-[0.8em] text-[22px]">
             No Broadcasts Active
           </div>
         )}
       </div>
 
-      {/* Re-Engineered Modal for better reliability and consistency */}
+      {/* MASTER CHANNEL DEPLOYMENT MODAL (FIXED SIZE & CUT ISSUES) */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-10 bg-slate-900/90 backdrop-blur-md overflow-hidden">
-          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300 border border-white/20">
-            {/* Modal Header */}
-            <div className="p-10 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-10 rounded-t-[3rem] flex-shrink-0">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 sm:p-12 bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-in fade-in duration-300">
+          <div className="bg-white rounded-[4.5rem] shadow-[0_0_200px_rgba(0,0,0,0.4)] w-full max-w-5xl flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-500 border border-white/20 relative">
+            
+            {/* Modal Header - Professional & Scaled */}
+            <div className="p-12 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20 rounded-t-[4.5rem] flex-shrink-0">
               <div>
-                <h4 className="text-3xl font-black text-slate-800 tracking-tight">Configure Channel</h4>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Establish a new broadcast node in the grid</p>
+                <h4 className="text-5xl font-black text-slate-800 tracking-tighter">Deploy Broadcast Node</h4>
+                <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.5em] mt-4">ESTABLISHING GLOBAL INGRESS CONFIGURATION</p>
               </div>
-              <button onClick={() => setIsAddModalOpen(false)} className="w-14 h-14 bg-slate-50 hover:bg-slate-100 rounded-[1.5rem] flex items-center justify-center text-slate-400 transition-all hover:rotate-90">
-                <span className="material-icons text-3xl">close</span>
+              <button onClick={() => setIsAddModalOpen(false)} className="w-20 h-20 bg-slate-50 hover:bg-slate-100 rounded-[2.5rem] flex items-center justify-center text-slate-400 transition-all hover:rotate-90 hover:scale-110">
+                <span className="material-icons text-5xl">close</span>
               </button>
             </div>
             
-            {/* Modal Scrollable Content */}
-            <div className="p-10 overflow-y-auto custom-scrollbar flex-1 bg-white space-y-12">
-              {/* Part 1: Identity */}
-              <div className="space-y-8">
-                <h5 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] border-l-4 border-blue-600 pl-4">Channel Identity</h5>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <InputField label="Official Title" value={name} onChange={setName} placeholder="e.g. Zee TV" />
-                  <InputField label="Asset Logo URL" value={img} onChange={setImg} placeholder="https://..." />
+            {/* Modal Scrollable Content - Master Layout */}
+            <div className="p-14 overflow-y-auto custom-scrollbar flex-1 bg-white space-y-16">
+              
+              {/* SECTION: Identity Protocols */}
+              <div className="space-y-10">
+                <div className="flex items-center space-x-6 border-l-8 border-blue-600 pl-6">
+                  <span className="material-icons text-3xl text-blue-600">badge</span>
+                  <h5 className="text-[14px] font-black text-slate-800 uppercase tracking-[0.4em]">Identity Metadata</h5>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Grid Taxonomy</label>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <InputField label="Official Broadcast Title" value={name} onChange={setName} placeholder="e.g. Star Movies HD" />
+                  <InputField label="Asset Logo Identity (URL)" value={img} onChange={setImg} placeholder="https://cloud.cdn/logo.png" />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div className="space-y-4">
+                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 px-1">Grid Taxonomy (Category)</label>
                     <div className="relative">
                       <select 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm appearance-none cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-[2rem] px-8 py-6 focus:outline-none focus:ring-8 focus:ring-blue-500/10 focus:bg-white transition-all text-lg font-black shadow-sm appearance-none cursor-pointer"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                       >
-                        <option value="">-- SELECT CATEGORY --</option>
+                        <option value="">-- ALLOCATE CATEGORY --</option>
                         {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                       </select>
-                      <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                      <span className="material-icons absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-3xl">expand_more</span>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Content Portfolio</label>
+                  <div className="space-y-4">
+                    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 px-1">Content Portfolio (Bouquet)</label>
                     <div className="relative">
                       <select 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm appearance-none cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-[2rem] px-8 py-6 focus:outline-none focus:ring-8 focus:ring-blue-500/10 focus:bg-white transition-all text-lg font-black shadow-sm appearance-none cursor-pointer"
                         value={bouquet}
                         onChange={(e) => setBouquet(e.target.value)}
                       >
-                        <option value="">-- SELECT BOUQUET --</option>
+                        <option value="">-- ALLOCATE BOUQUET --</option>
                         {bouquets.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                       </select>
-                      <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                      <span className="material-icons absolute right-8 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-3xl">expand_more</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Part 2: Technical Protocol */}
-              <div className="space-y-8">
-                <h5 className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] border-l-4 border-indigo-600 pl-4">Delivery Protocol</h5>
-                <div className="space-y-8">
-                  <InputField label="Stream Ingress Link" value={streamUrl} onChange={setStreamUrl} placeholder="HLS/DASH Master URL" />
+              {/* SECTION: Transmission Protocol */}
+              <div className="space-y-10">
+                <div className="flex items-center space-x-6 border-l-8 border-indigo-600 pl-6">
+                  <span className="material-icons text-3xl text-indigo-600">sensors</span>
+                  <h5 className="text-[14px] font-black text-slate-800 uppercase tracking-[0.4em]">Transmission Pipeline</h5>
+                </div>
+                
+                <div className="space-y-12">
+                  <InputField label="Ingress Master Stream Link" value={streamUrl} onChange={setStreamUrl} placeholder="HLS (.m3u8) or DASH (.mpd) master link" />
                   
-                  <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Codec Encapsulation</label>
-                      <div className="flex space-x-6">
-                        <label className="flex items-center space-x-3 cursor-pointer group">
-                          <input type="radio" checked={streamType === 'hls'} onChange={() => { setStreamType('hls'); setIsDrmEnabled(false); }} className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-slate-300" />
-                          <span className="text-xs font-black text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">HLS (M3U8)</span>
+                  <div className="bg-slate-50 p-12 rounded-[3.5rem] border border-slate-100 flex flex-col xl:flex-row xl:items-center justify-between gap-12">
+                    <div className="space-y-6">
+                      <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6 px-1">Codec Encapsulation Protocol</label>
+                      <div className="flex flex-wrap gap-10">
+                        <label className="flex items-center space-x-5 cursor-pointer group">
+                          <input 
+                            type="radio" 
+                            name="type"
+                            checked={streamType === 'hls'} 
+                            onChange={() => { setStreamType('hls'); setIsDrmEnabled(false); }} 
+                            className="w-8 h-8 text-blue-600 focus:ring-blue-500 border-slate-300" 
+                          />
+                          <span className="text-xl font-black text-slate-700 uppercase tracking-[0.1em] group-hover:text-blue-600 transition-colors">HLS Protocol</span>
                         </label>
-                        <label className="flex items-center space-x-3 cursor-pointer group">
-                          <input type="radio" checked={streamType === 'dash'} onChange={() => { setStreamType('dash'); setIsDrmEnabled(true); }} className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-slate-300" />
-                          <span className="text-xs font-black text-slate-600 uppercase tracking-wider group-hover:text-blue-600 transition-colors">DASH (MPD)</span>
+                        <label className="flex items-center space-x-5 cursor-pointer group">
+                          <input 
+                            type="radio" 
+                            name="type"
+                            checked={streamType === 'dash'} 
+                            onChange={() => { setStreamType('dash'); setIsDrmEnabled(true); }} 
+                            className="w-8 h-8 text-blue-600 focus:ring-blue-500 border-slate-300" 
+                          />
+                          <span className="text-xl font-black text-slate-700 uppercase tracking-[0.1em] group-hover:text-blue-600 transition-colors">DASH Protocol</span>
                         </label>
                       </div>
                     </div>
 
-                    <div className="flex-1 max-w-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-black text-slate-800 uppercase tracking-wider">
-                          DRM Protection
+                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200 flex-1 max-w-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[13px] font-black text-slate-800 uppercase tracking-widest">
+                          DRM Encryption
                         </span>
                         <button 
                           onClick={() => streamType !== 'dash' && setIsDrmEnabled(!isDrmEnabled)}
-                          className={`w-14 h-7 rounded-full relative transition-all duration-300 ${isDrmEnabled ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30' : 'bg-slate-300'} ${streamType === 'dash' ? 'cursor-not-allowed opacity-80' : ''}`}
+                          className={`w-20 h-10 rounded-full relative transition-all duration-500 ${isDrmEnabled ? 'bg-emerald-500 shadow-[0_10px_30px_rgba(16,185,129,0.4)]' : 'bg-slate-300'} ${streamType === 'dash' ? 'cursor-not-allowed opacity-70 grayscale' : ''}`}
                         >
-                          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${isDrmEnabled ? 'translate-x-8' : 'translate-x-1'}`} />
+                          <div className={`absolute top-1.5 w-7 h-7 bg-white rounded-full shadow-2xl transition-all duration-500 ${isDrmEnabled ? 'translate-x-11' : 'translate-x-1.5'}`} />
                         </button>
                       </div>
-                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-2 italic">Required for DASH clearing</p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">Required authorization for DASH clearing</p>
                     </div>
                   </div>
 
-                  {/* DRM Sub-form */}
+                  {/* MASTER DRM CONFIGURATION BLOCK */}
                   {(isDrmEnabled || streamType === 'dash') && (
-                    <div className="p-8 bg-amber-50 rounded-[2.5rem] border border-amber-100 space-y-8 animate-in slide-in-from-top-4">
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                         <InputField label="ClearKey ID (KID)" value={kid} onChange={setKid} placeholder="32 chars HEX" />
-                         <InputField label="ClearKey VALUE (KEY)" value={key} onChange={setKey} placeholder="32 chars HEX" />
+                    <div className="p-12 bg-amber-50/50 rounded-[4rem] border-2 border-dashed border-amber-200 space-y-12 animate-in slide-in-from-top-10 duration-500">
+                       <div className="flex items-center space-x-4 mb-2">
+                          <span className="material-icons text-amber-500">lock_open</span>
+                          <span className="text-[12px] font-black text-amber-700 uppercase tracking-[0.4em]">ClearKey Security Configuration</span>
+                       </div>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                         <InputField label="ClearKey ID (KID)" value={kid} onChange={setKid} placeholder="32 character HEX sequence" />
+                         <InputField label="ClearKey Value (KEY)" value={key} onChange={setKey} placeholder="32 character HEX sequence" />
                        </div>
                     </div>
                   )}
@@ -219,20 +248,20 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
               </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="p-10 bg-slate-50 border-t border-slate-100 rounded-b-[3rem] flex flex-col sm:flex-row justify-end gap-6 flex-shrink-0 sticky bottom-0 z-10">
+            {/* Modal Footer - Powerful & Fixed */}
+            <div className="p-12 bg-slate-50 border-t border-slate-100 rounded-b-[4.5rem] flex flex-col sm:flex-row justify-end items-center gap-10 flex-shrink-0 sticky bottom-0 z-20">
               <button 
                 onClick={() => setIsAddModalOpen(false)}
-                className="px-10 py-5 text-slate-400 font-black uppercase tracking-widest text-[11px] hover:text-slate-800 transition-colors"
+                className="px-12 py-6 text-slate-400 font-black uppercase tracking-[0.4em] text-[13px] hover:text-slate-800 transition-colors"
               >
-                Abort Configuration
+                Abort Deployment
               </button>
               <button 
                 disabled={!name || !streamUrl || !category || (streamType === 'dash' && (!kid || !key))}
                 onClick={handleAdd}
-                className="px-20 py-6 bg-blue-600 text-white rounded-2xl shadow-2xl shadow-blue-500/40 uppercase tracking-widest text-[11px] font-black disabled:opacity-50 hover:bg-blue-700 transition-all active:scale-95"
+                className="px-32 py-8 bg-blue-600 text-white rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(37,99,235,0.6)] uppercase tracking-[0.3em] text-[14px] font-black disabled:opacity-50 disabled:grayscale hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all"
               >
-                Deploy Broadcast
+                Authorize & Deploy Ingress
               </button>
             </div>
           </div>
@@ -242,15 +271,16 @@ const Channels: React.FC<ChannelsProps> = ({ channels, categories, bouquets, onA
   );
 };
 
+// Enhanced Internal Input Component
 const InputField = ({ label, value, onChange, placeholder }: any) => (
   <div className="w-full">
-    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">{label}</label>
+    <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-5 px-1">{label}</label>
     <input 
       type="text" 
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:bg-white transition-all text-sm font-bold shadow-sm"
+      className="w-full bg-slate-50 border border-slate-200 rounded-[2rem] px-8 py-7 focus:outline-none focus:ring-8 focus:ring-blue-500/10 focus:bg-white transition-all text-xl font-black shadow-sm placeholder:text-slate-300 text-slate-800"
     />
   </div>
 );
