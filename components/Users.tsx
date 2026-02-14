@@ -15,11 +15,15 @@ const Users: React.FC<UsersProps> = ({ users, packages, onRecharge, onDelete }) 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedPkgId, setSelectedPkgId] = useState('');
 
-  const filteredUsers = users.filter(u => 
-    u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.macAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.mobile.includes(searchTerm)
-  );
+  // Robust filtering with safety checks to prevent crashes on missing data
+  const filteredUsers = users.filter(u => {
+    const name = u.name?.toLowerCase() || '';
+    const mac = u.macAddress?.toLowerCase() || '';
+    const mobile = u.mobile || '';
+    const search = searchTerm.toLowerCase();
+    
+    return name.includes(search) || mac.includes(search) || mobile.includes(search);
+  });
 
   const openRecharge = (user: User) => {
     setSelectedUser(user);
@@ -28,92 +32,107 @@ const Users: React.FC<UsersProps> = ({ users, packages, onRecharge, onDelete }) 
   };
 
   return (
-    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-        <div className="relative flex-1">
-          <span className="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-          <input 
-            type="text" 
-            placeholder="Search by name, mobile, or MAC..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="space-y-10 animate-in duration-500">
+      {/* Header & Search Infrastructure */}
+      <div className="bg-white p-12 rounded-[4rem] border border-slate-100 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+        <div>
+          <h3 className="text-4xl font-black text-slate-800 tracking-tighter leading-none">Subscriber Registry</h3>
+          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Active Network Node Management</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-bold text-slate-500 px-3 py-1 bg-slate-100 rounded-lg">
-            {filteredUsers.length} Users
-          </span>
+        
+        <div className="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
+          <div className="relative w-full sm:w-96 group">
+            <span className="material-icons absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">search</span>
+            <input 
+              type="text" 
+              placeholder="Search ID, Mobile or MAC..."
+              className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-200 rounded-[2rem] focus:outline-none focus:ring-8 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 transition-all text-base font-black shadow-sm placeholder:text-slate-300"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="px-10 py-5 bg-blue-50 rounded-[2rem] border border-blue-100 flex items-center space-x-4">
+            <span className="text-[11px] font-black text-blue-600 uppercase tracking-[0.2em]">Total Population</span>
+            <span className="text-2xl font-black text-blue-800 tracking-tighter">{users.length}</span>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      {/* Main Table Infrastructure */}
+      <div className="bg-white rounded-[4.5rem] shadow-sm border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <thead className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-[0.5em]">
               <tr>
-                <th className="px-6 py-4">Subscriber</th>
-                <th className="px-6 py-4">MAC Address</th>
-                <th className="px-6 py-4">Active Plan</th>
-                <th className="px-6 py-4">Expiry Date</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-14 py-10">Subscriber Identity</th>
+                <th className="px-14 py-10">Hardware Address</th>
+                <th className="px-14 py-10">Current Allocation</th>
+                <th className="px-14 py-10">Expiration</th>
+                <th className="px-14 py-10">State</th>
+                <th className="px-14 py-10 text-right">Engineering</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-50">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400 italic">
-                    No matching users found.
+                  <td colSpan={6} className="px-14 py-60 text-center font-black text-slate-200 uppercase tracking-[0.8em] text-[20px]">
+                    No Matching Nodes Found
                   </td>
                 </tr>
               ) : filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${user.status === 'Active' ? 'bg-blue-600' : 'bg-slate-400'}`}>
-                        {user.name.charAt(0)}
+                <tr key={user.id} className="hover:bg-slate-50/50 transition-all group">
+                  <td className="px-14 py-10">
+                    <div className="flex items-center space-x-10">
+                      <div className={`w-20 h-20 rounded-[2.5rem] flex items-center justify-center text-white text-3xl font-black shadow-2xl transition-transform group-hover:scale-110 ${user.status === 'Active' ? 'bg-blue-600 shadow-blue-500/30' : 'bg-slate-400 shadow-slate-400/30'}`}>
+                        {(user.name || 'U').charAt(0)}
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-800">{user.name}</p>
-                        <p className="text-xs text-slate-500">{user.mobile}</p>
+                        <p className="text-[20px] font-black text-slate-800 tracking-tighter leading-none mb-2">{user.name || 'System User'}</p>
+                        <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{user.mobile || 'No Contact'}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm font-mono text-slate-600">
-                    {user.macAddress}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`text-xs font-bold px-2 py-1 rounded-lg ${user.activePlan === 'No Plan' ? 'bg-slate-100 text-slate-400' : 'bg-indigo-50 text-indigo-600'}`}>
-                      {user.activePlan}
+                  <td className="px-14 py-10">
+                    <span className="font-mono text-[15px] bg-slate-100 px-7 py-3 rounded-2xl text-slate-600 font-black border border-slate-200 uppercase tracking-widest">
+                      {user.macAddress || 'UNASSIGNED'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    {new Date(user.expiryDate).toLocaleDateString()}
+                  <td className="px-14 py-10">
+                    <div className="flex items-center space-x-4">
+                       <span className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm ${user.activePlan === 'No Plan' ? 'bg-slate-100 text-slate-400' : 'bg-indigo-600 text-white'}`}>
+                        {user.activePlan || 'DEPROVISIONED'}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      user.status === 'Active' 
-                        ? 'bg-emerald-100 text-emerald-700' 
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {user.status}
-                    </span>
+                  <td className="px-14 py-10">
+                    <p className="text-[15px] font-black text-slate-500">
+                      {user.expiryDate ? new Date(user.expiryDate).toLocaleDateString() : 'NEVER'}
+                    </p>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end space-x-2">
+                  <td className="px-14 py-10">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-2.5 h-2.5 rounded-full ${user.status === 'Active' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                      <span className={`text-[11px] font-black uppercase tracking-[0.2em] ${
+                        user.status === 'Active' ? 'text-emerald-600' : 'text-red-500'
+                      }`}>
+                        {user.status || 'UNKNOWN'}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-14 py-10 text-right">
+                    <div className="flex items-center justify-end space-x-5">
                       <button 
                         onClick={() => openRecharge(user)}
-                        className="flex items-center space-x-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 shadow-md shadow-blue-900/10 transition-all"
+                        className="flex items-center space-x-3 px-8 py-4 bg-blue-600 text-white rounded-[1.75rem] font-black uppercase text-[11px] tracking-[0.2em] shadow-xl shadow-blue-500/30 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all"
                       >
-                        <span className="material-icons text-xs">bolt</span>
-                        <span>Recharge</span>
+                        <span className="material-icons text-xl">bolt</span>
+                        <span>RECHARGE</span>
                       </button>
                       <button 
                         onClick={() => onDelete(user.id)}
-                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className="w-16 h-16 text-red-300 bg-red-50 hover:bg-red-500 hover:text-white rounded-[1.75rem] transition-all flex items-center justify-center active:scale-95 shadow-sm"
                       >
-                        <span className="material-icons text-sm">delete</span>
+                        <span className="material-icons text-3xl">delete_sweep</span>
                       </button>
                     </div>
                   </td>
@@ -124,64 +143,78 @@ const Users: React.FC<UsersProps> = ({ users, packages, onRecharge, onDelete }) 
         </div>
       </div>
 
-      {/* Recharge Modal */}
+      {/* High-Fidelity Recharge Modal */}
       {isRechargeModalOpen && selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-slate-900/95 backdrop-blur-2xl animate-in fade-in duration-300">
+          <div className="bg-white rounded-[4rem] shadow-[0_0_200px_rgba(0,0,0,0.4)] w-full max-w-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-500 border border-white/20">
+            <div className="p-12 border-b border-slate-100 flex justify-between items-center bg-white rounded-t-[4rem] flex-shrink-0">
               <div>
-                <h4 className="text-lg font-bold text-slate-800">Renew Subscription</h4>
-                <p className="text-xs text-slate-500">Sub: {selectedUser.name}</p>
+                <h4 className="text-4xl font-black text-slate-800 tracking-tighter">Renew Subscription</h4>
+                <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">FOR: {selectedUser.name}</p>
               </div>
-              <button onClick={() => setIsRechargeModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <span className="material-icons">close</span>
+              <button onClick={() => setIsRechargeModalOpen(false)} className="w-18 h-18 bg-slate-50 hover:bg-slate-100 rounded-[2rem] flex items-center justify-center text-slate-400 transition-all hover:rotate-90">
+                <span className="material-icons text-4xl">close</span>
               </button>
             </div>
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-3">
+
+            <div className="p-14 overflow-y-auto custom-scrollbar flex-1 bg-white space-y-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 {packages.map(pkg => (
                   <button
                     key={pkg.id}
                     onClick={() => setSelectedPkgId(pkg.id)}
-                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    className={`p-10 rounded-[3rem] border-4 text-left transition-all duration-300 relative group overflow-hidden ${
                       selectedPkgId === pkg.id 
-                        ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50' 
-                        : 'border-slate-100 hover:border-slate-200'
+                        ? 'border-blue-600 bg-blue-50 shadow-2xl shadow-blue-500/20' 
+                        : 'border-slate-100 hover:border-blue-200 hover:bg-slate-50'
                     }`}
                   >
-                    <p className="text-sm font-bold text-slate-800">{pkg.name}</p>
-                    <p className="text-xl font-black text-blue-600">₹{pkg.price}</p>
-                    <p className="text-[10px] text-slate-500 mt-1 uppercase font-bold">{pkg.durationDays} Days</p>
+                    {selectedPkgId === pkg.id && (
+                       <span className="material-icons absolute top-6 right-6 text-blue-600 text-3xl animate-in zoom-in">check_circle</span>
+                    )}
+                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">{pkg.durationDays} Days Duration</p>
+                    <p className="text-2xl font-black text-slate-800 tracking-tighter mb-6 leading-none">{pkg.name}</p>
+                    <div className="flex items-baseline space-x-1">
+                      <span className="text-4xl font-black text-blue-600">₹{pkg.price}</span>
+                      <span className="text-[10px] font-black text-blue-400 uppercase">Net</span>
+                    </div>
                   </button>
                 ))}
               </div>
               
               {selectedPkgId && (
-                <div className="bg-slate-50 p-4 rounded-xl space-y-2">
-                  <div className="flex justify-between text-xs text-slate-500">
-                    <span>New Expiry Date:</span>
-                    <span className="font-bold text-slate-800">
-                      {(() => {
-                        const d = new Date();
-                        const pkg = packages.find(p => p.id === selectedPkgId);
-                        d.setDate(d.getDate() + (pkg?.durationDays || 0));
-                        return d.toLocaleDateString();
-                      })()}
-                    </span>
+                <div className="p-10 bg-slate-900 text-white rounded-[3.5rem] shadow-2xl space-y-6 animate-in slide-in-from-top-4">
+                  <div className="flex items-center space-x-6 border-b border-white/10 pb-6">
+                    <span className="material-icons text-blue-500 text-3xl">event_available</span>
+                    <div>
+                      <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">New Expiration Protocol</p>
+                      <p className="text-[20px] font-black tracking-tight">
+                        {(() => {
+                          const d = new Date();
+                          const pkg = packages.find(p => p.id === selectedPkgId);
+                          d.setDate(d.getDate() + (pkg?.durationDays || 0));
+                          return d.toLocaleDateString(undefined, { dateStyle: 'long' });
+                        })()}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-xs text-slate-500">
-                    <span>Account Status:</span>
-                    <span className="font-bold text-emerald-600">Active</span>
+                  <div className="flex items-center space-x-6">
+                    <span className="material-icons text-emerald-500 text-3xl">verified_user</span>
+                    <div>
+                      <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em]">Service State Migration</p>
+                      <p className="text-[20px] font-black text-emerald-400 tracking-tight uppercase">Authorized Activation</p>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-            <div className="p-6 bg-slate-50 border-t border-slate-100 rounded-b-2xl flex justify-end space-x-3">
+
+            <div className="p-12 bg-slate-50 border-t border-slate-100 rounded-b-[4rem] flex flex-col sm:flex-row justify-end items-center gap-8 flex-shrink-0">
               <button 
                 onClick={() => setIsRechargeModalOpen(false)}
-                className="px-4 py-2 text-slate-600 font-bold text-sm hover:text-slate-800"
+                className="px-12 py-6 font-black text-slate-400 uppercase tracking-[0.4em] text-[13px] hover:text-slate-800 transition-colors"
               >
-                Cancel
+                Abort Renew
               </button>
               <button 
                 disabled={!selectedPkgId}
@@ -189,9 +222,9 @@ const Users: React.FC<UsersProps> = ({ users, packages, onRecharge, onDelete }) 
                   onRecharge(selectedUser.id, selectedPkgId);
                   setIsRechargeModalOpen(false);
                 }}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-900/20 transition-all disabled:opacity-50 disabled:shadow-none"
+                className="px-32 py-8 bg-blue-600 text-white rounded-[2.5rem] shadow-[0_30px_60px_rgba(37,99,235,0.4)] uppercase tracking-[0.3em] text-[13px] font-black transition-all hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:grayscale"
               >
-                Confirm Recharge
+                Authorize & Provision
               </button>
             </div>
           </div>
