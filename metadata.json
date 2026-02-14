@@ -1,0 +1,8 @@
+{
+  "name": "Bharat Digital IPTV Admin",
+  "description": "A comprehensive IPTV administrative dashboard for managing users, device requests, channels, categories, and subscription packages with real-time status tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
